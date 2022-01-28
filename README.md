@@ -32,5 +32,6 @@ This repository contains all of the open-source scripts and tools to be used in 
 ```
 
 - `documentation/`: Contains all documents necessary to respond to injects, incidents, and track inventory
+- `misc/`: Anything that doesn't really fit in the other categories
 - `scripts/`: Scripts that enumerate, harden, and more.
 - `utilities/`: Programs that are intended to be use during the "mid-game" of the competition to monitor the various systems
