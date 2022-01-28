@@ -27,20 +27,21 @@ check_for_root () {
 }
 
 print_header () {
-    echo -e "$asciiart"
+    echo -e "\e[1;36m$asciiart\e[0m"
     echo -e "\e[1;35mAn00bRektn - https://an00brektn.github.io\e[0m"
     date
     echo
 }
 
 print_checklists () {
-    echo -e "\e[1;33m..aaannnd DONE!\e[0m"
-    echo -e "Because CCDC is scuffed and doesn't give us a chance to look at our stuff, here are the first few things to do:\n
+    echo -e "\n\n  \e[1;33m..aaannnd DONE!\e[0m"
+    echo -e "  Because CCDC is scuffed and doesn't give us a chance to look at our stuff, here are the first few things to do:\n
+            $blueinfo READ THE RULES\n
             $blueinfo Identify the necessary services running on the system. Disable any that are not necessary.\n
             $blueinfo Fix the SSH configuration in /etc/ssh/sshd_config\n
             $blueinfo Check the other users that might be on this system and see what they are capable of\n
             $blueinfo Identify any and all files that seem out of order from a typical Linux system\n
-            $blueinfo READ THE RULES\n
+            $blueinfo Use our team's repository here: https://github.com/Lewis-Cyber-Defense/mwccdc\n
             $blueinfo Find a hardening guide here: https://security.utexas.edu/os-hardening-checklist\n
             $greenplus There's definitely more things than that, but I can't think of them right now. Good luck!\n
             $blueinfo Happy defending! o7\n
@@ -56,13 +57,23 @@ print_info () {
 }
 
 start_battlestation () {
-    echo -e "$greenplus STARTING BATTLESTATION $greenplus"
+    echo -e "\n  $greenplus STARTING BATTLESTATION $greenplus\n"
     useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
     echo -e "$blueinfo Please set the blueteam password"
     passwd blueteam
     mkdir /home/blueteam/tools
     chown blueteam:blueteam /home/blueteam/tools
     sudo -u blueteam chmod 0700 /home/blueteam/tools
+
+    # Download some basic stuffs
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/linpeas.sh -O /home/blueteam/tools/linpeas.sh
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/LinEnum.sh -O /home/blueteam/tools/LinEnum.sh
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/linux/rkhunter-1.4.6.tar.gz?raw=true -O /home/blueteam/tools/rkhunter-1.4.6.tar.gz
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/pspy/pspy64?raw=true -O /home/blueteam/tools/pspy64
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/lynis-3.0.7.zip?raw=true -O /home/blueteam/tools/lynis-3.0.7.zip
+
+    # change ownership
+    find /home/blueteam/tools -type f | while read line; do chown blueteam:blueteam $line; sudo -u blueteam chmod 0700 $line; done
 }
 
 apt_update() {
@@ -82,3 +93,5 @@ start_battlestation
 
 apt_update
 apt_upgrade
+
+print_checklists
