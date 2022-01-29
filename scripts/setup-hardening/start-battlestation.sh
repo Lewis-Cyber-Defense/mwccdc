@@ -37,6 +37,7 @@ print_checklists () {
     echo -e "\n\n  \e[1;33m..aaannnd DONE!\e[0m"
     echo -e "  Because CCDC is scuffed and doesn't give us a chance to look at our stuff, here are the first few things to do:\n
             $blueinfo READ THE RULES\n
+            $blueinfo LOCK ROOT ACCOUNT USING sudo usermod -U root (making you do this manually in case this script goes bad).\n
             $blueinfo Identify the necessary services running on the system. Disable any that are not necessary.\n
             $blueinfo Fix the SSH configuration in /etc/ssh/sshd_config\n
             $blueinfo Check the other users that might be on this system and see what they are capable of\n
@@ -74,6 +75,7 @@ start_battlestation () {
 
     # change ownership
     find /home/blueteam/tools -type f | while read line; do chown blueteam:blueteam $line; sudo -u blueteam chmod 0700 $line; done
+
 }
 
 apt_update() {
