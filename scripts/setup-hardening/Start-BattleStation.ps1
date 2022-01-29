@@ -53,10 +53,12 @@ function Invoke-BattleStation(){
         A Powershell-based Windows Hardening script for use in competitions like MWCCDC or Cyberforce
         .EXAMPLE
         > Invoke-BattleStation -AddUser
-        Runs the script, adding a separate blueteam admin user
-        > Invoke-BattleStation
-        Runs the script, without a separate blueteam admin user
+        Runs the script, remember to import using . .\Start-BattleStation.ps1
+
     #>
+    Print-Header
+    Check-Privileges
+    Write-OSInfo
 
     Write-Host "[!!!!] STARTING BATTLESTATION [!!!!]" -ForegroundColor Yellow
     Write-Host
@@ -68,9 +70,15 @@ function Invoke-BattleStation(){
         $Password = Read-Host "Enter blueteam password" -AsSecureString
         New-LocalUser "blueteam" -Password $Password -FullName "blooteam" -Description "Blue team account"
         Add-LocalGroupMember -Group "Administrators" -Member "blueteam"
+        Write-Host "[!] Please sign in the new blueteam user before proceeding with the install, then run Invoke-Install -User blueteam"
+        
     } else {
-        $user = "Administrator"
+        Invoke-Install("sreisz")
     }
+
+}
+
+function Invoke-Install($user){
     $tools = "c:\Users\$user\"
     Write-Host "[*] Setting up C:\Users\$user\Tools folder..."
     New-Item -Path $tools -Name "Tools" -ItemType "directory"
@@ -78,6 +86,7 @@ function Invoke-BattleStation(){
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/SysinternalsSuite.zip?raw=true" -OutFile $tools"\SysinternalsSuite.zip"
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/windows/HardeningKitty-master.zip?raw=true" -OutFile $tools"\HardeningKitty.zip"
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/setup-hardening/posh-dsc-windows-hardening.zip" -OutFile $tools"\posh-dsc-windows-hardening.zip"
+    Write-Checklist
 }
 
 function Write-Checklist{
@@ -90,10 +99,6 @@ function Write-Checklist{
     Write-Host "    [**] Here's a decent hardening guide: https://security.utexas.edu/os-hardening-checklist/windows-r2" -ForegroundColor Yellow
     Write-Host "    [**] Use our team repo: https://github.com/Lewis-Cyber-Defense/mwccdc" -ForegroundColor Yellow
     Write-Host "    [**] Disable IPv6, LLMNR, turn on SMB signing" -ForegroundColor Yellow
+    Write-Host "    [**] IF THIS IS ACTIVE DIRECTORY, get hands on with those GPOs and OUs" -ForegroundColor Red
     Write-Host "    [++] Good luck, have fun, ask questions, and happy defending! o7" -ForegroundColor Green
 }
-Print-Header
-Check-Privileges
-Write-OSInfo
-Invoke-BattleStation
-Write-Checklist
