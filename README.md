@@ -7,31 +7,40 @@ This repository contains all of the open-source scripts and tools to be used in 
 ```text
 .
 ├── documentation
-│   ├── Asset-Inventory.xlsx
-│   ├── Incident-Report-Template.docx
-│   └── Inject-Tracker.xlsx
+│   ├── Asset-Inventory.xlsx
+│   ├── Incident-Report-Template.docx
+│   ├── Inject-Tracker.xlsx
+│   └── README.md
 ├── README.md
 ├── scripts
-│   └── enumeration
-│       ├── linux
-│       │   ├── LinEnum.sh
-│       │   └── linpeas.sh
-│       ├── README.md
-│       └── windows
-│           ├── Seatbeltx64.exe
-│           ├── Seatbeltx86.exe
-│           ├── winPEAS.bat
-│           ├── winPEASx64_ofs.exe
-│           └── winPEASx86_ofs.exe
+│   ├── enumeration
+│   │   ├── linux
+│   │   │   ├── LinEnum.sh
+│   │   │   ├── linpeas.sh
+│   │   │   └── rkhunter-1.4.6.tar.gz
+│   │   ├── README.md
+│   │   └── windows
+│   │       ├── HardeningKitty-master.zip
+│   │       ├── Seatbeltx64.exe
+│   │       ├── Seatbeltx86.exe
+│   │       ├── winPEAS.bat
+│   │       ├── winPEASx64_ofs.exe
+│   │       └── winPEASx86_ofs.exe
+│   └── setup-hardening
+│       ├── posh-dsc-windows-hardening.zip
+│       ├── README.md
+│       ├── Start-BattleStation.ps1
+│       └── start-battlestation.sh
 └── utilities
+    ├── john-1.9.0-jumbo-1-win64.zip
     ├── lynis-3.0.7.zip
     ├── pspy
-    │   ├── pspy32
-    │   └── pspy64
+    │   ├── pspy32
+    │   └── pspy64
+    ├── README.md
     └── SysinternalsSuite.zip
 ```
 
 - `documentation/`: Contains all documents necessary to respond to injects, incidents, and track inventory
-- `misc/`: Anything that doesn't really fit in the other categories
 - `scripts/`: Scripts that enumerate, harden, and more.
 - `utilities/`: Programs that are intended to be use during the "mid-game" of the competition to monitor the various systems

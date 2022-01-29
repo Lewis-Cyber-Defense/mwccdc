@@ -73,7 +73,7 @@ function Invoke-BattleStation(){
         Write-Host "[!] Please sign in the new blueteam user before proceeding with the install, then run Invoke-Install -User blueteam"
         
     } else {
-        Invoke-Install("sreisz")
+        Invoke-Install("Administrator") # This might need to be changed depending on the circumstance
     }
 
 }
