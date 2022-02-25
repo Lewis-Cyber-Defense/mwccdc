@@ -18,6 +18,8 @@ blinkexclaim='\e[1;31m[\e[5;31m!!\e[0m\e[1;31m]\e[0m'
 fourblinkexclaim='\e[1;31m[\e[5;31m!!!!\e[0m\e[1;31m]\e[0m'
 
 asciiart=$(base64 -d <<< "H4sIAD5m9GEA/7VQSw5DIQjcewqWmjThQib2/qd4Mww+WHRbXkBxPtCa2WGg4lpRbaDt9eYvJrJ5DDOn3N38DmGwFYOwLUF8vRkjklnoPKTmRjDfODYtwuarWWxTS25BSlRpsi807gHZHiK0lfCpffd64UaCbHLq6sJe+Y3wcGzP/MASQv4YHpiiCYKSBAqqhjdhIWHCxN/yv3gAjMS4Zy0CAAA="  | gunzip )
+header=$(base64 -d <<< "H4sIAH8CGGIA/6WPQQpCMQxE9z3FgCep/VNaCI00CVXvf5CKbgTd/bd9j4G5nCDhhxzedPYnD4RxGnTI49PF+JK5FJphdRFcidtUYwl/GVd4I2qI/NkHeHcOh9Z3JnmlMxc204Dxgv8AAAA=" | gunzip)
+header2=$(base64 -d <<< "H4sIAH8EGGIA/4WMsQnAQAwDe0+hCaKFHpRBgme3ZReBNFFxHMe/8Zn0WqsR4AEetwGlu+nmJ4Ng5rFqcUnEtvm3d/5XvqNeJI8AAAA=" | gunzip)
 
 check_for_root () {
     if [ "$EUID" -ne 0 ]
@@ -59,23 +61,27 @@ print_info () {
 
 start_battlestation () {
     echo -e "\n  $greenplus STARTING BATTLESTATION $greenplus\n"
-    useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
-    echo -e "$blueinfo Please set the blueteam password"
-    passwd blueteam
-    mkdir /home/blueteam/tools
-    chown blueteam:blueteam /home/blueteam/tools
-    sudo -u blueteam chmod 0700 /home/blueteam/tools
+    #useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
+    echo -e "$blueinfo Please set the sysadmin password"
+    passwd sysadmin
+    mkdir /home/sysadmin/tools
+    chown sysadmin:sysadmin /home/sysadmin/tools
+    sudo -u sysadmin chmod 0700 /home/sysadmin/tools
 
     # Download some basic stuffs
-    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/linpeas.sh -O /home/blueteam/tools/linpeas.sh
-    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/LinEnum.sh -O /home/blueteam/tools/LinEnum.sh
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/linux/rkhunter-1.4.6.tar.gz?raw=true -O /home/blueteam/tools/rkhunter-1.4.6.tar.gz
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/pspy/pspy64?raw=true -O /home/blueteam/tools/pspy64
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/lynis-3.0.7.zip?raw=true -O /home/blueteam/tools/lynis-3.0.7.zip
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/linpeas.sh -O /home/sysadmin/tools/linpeas.sh
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/LinEnum.sh -O /home/sysadmin/tools/LinEnum.sh
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/linux/rkhunter-1.4.6.tar.gz?raw=true -O /home/sysadmin/tools/rkhunter-1.4.6.tar.gz
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/pspy/pspy64?raw=true -O /home/sysadmin/tools/pspy64
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/lynis-3.0.7.zip?raw=true -O /home/sysadmin/tools/lynis-3.0.7.zip
 
     # change ownership
-    find /home/blueteam/tools -type f | while read line; do chown blueteam:blueteam $line; sudo -u blueteam chmod 0700 $line; done
+    find /home/sysadmin/tools -type f | while read line; do chown sysadmin:sysadmin $line; sudo -u sysadmin chmod 0700 $line; done
 
+    # Setting banners
+    echo -e "$greenplus Setting the banner..."
+    echo $header > /etc/login.warn
+    echo $header2 > /etc/motd
 }
 
 apt_update() {
