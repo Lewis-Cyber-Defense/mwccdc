@@ -62,30 +62,34 @@ function Invoke-BattleStation(){
 
     Write-Host "[!!!!] STARTING BATTLESTATION [!!!!]" -ForegroundColor Yellow
     Write-Host
-    Write-Host "[*] The following information is critically important" -ForegroundColor Cyan
-    $AddUser = Read-Host "Would you like to add a separate blueteam admin user (y/n)? "
-    if($AddUser -eq "y"){
         $user = "blueteam"
         Write-Host "[*] Adding User..." -ForegroundColor Green
         $Password = Read-Host "Enter blueteam password" -AsSecureString
         New-LocalUser "blueteam" -Password $Password -FullName "blooteam" -Description "Blue team account"
         Add-LocalGroupMember -Group "Administrators" -Member "blueteam"
-        Write-Host "[!] Please sign in the new blueteam user before proceeding with the install, then run Invoke-Install -User blueteam"
-        
-    } else {
         Invoke-Install("Administrator") # This might need to be changed depending on the circumstance
-    }
-
 }
 
 function Invoke-Install($user){
-    $tools = "c:\Users\$user\"
-    Write-Host "[*] Setting up C:\Users\$user\Tools folder..."
+    $tools = "c:\Users\$user\Desktop"
+    Write-Host "[*] Setting up C:\Users\$user\Desktop\Tools folder..."
     New-Item -Path $tools -Name "Tools" -ItemType "directory"
 
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/SysinternalsSuite.zip?raw=true" -OutFile $tools"\SysinternalsSuite.zip"
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/windows/HardeningKitty-master.zip?raw=true" -OutFile $tools"\HardeningKitty.zip"
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/setup-hardening/posh-dsc-windows-hardening.zip" -OutFile $tools"\posh-dsc-windows-hardening.zip"
+    
+    # Install Sysmon
+    Expand-Archive -Force $tools\SysinternalsSuite.zip $tools\SysinternalsSuite
+    Invoke-WebRequest "https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/utilities/configuration-files/sysmonconfig-export.xml" -Outfile $tools"\sysmonconfig-export.xml"
+    Move-Item $tools\SysinternalsSuite\Sysmon64.exe C:\Windows\System32\Sysmon64.exe
+    C:\Windows\System32\Sysmon64.exe -i $tools"\sysmonconfig-export.xml" -accepteula
+    
+    # Set Banner
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "legalnoticecaption" -Value "SYSTEM AUTHORIZATION WARNING"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "legalnoticetext" -Value "######################################## \n AUTHORIZED USERS ONLY \n UNAUTHORIZED ACCESS WILL BE PROSECUTED TO THE FULL EXTENT OF THE LAW \n########################################"
+
+
     Write-Checklist
 }
 
