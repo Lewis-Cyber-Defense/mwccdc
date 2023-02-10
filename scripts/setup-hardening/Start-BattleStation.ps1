@@ -9,7 +9,7 @@ function Print-Header {
 '@
     
     Write-Host $header -ForegroundColor Cyan
-    Write-Host "An00bRektn - https://an00brektn.github.io" -ForegroundColor Magenta
+    Write-Host "An00bRektn - https://notateamserver.xyz" -ForegroundColor Magenta
     Write-Host
 }
 
@@ -25,7 +25,6 @@ function Check-Privileges {
 function Write-OSInfo{
     [string]$osname = (Get-WmiObject -class Win32_OperatingSystem).Caption
     [string]$osversion = [Environment]::OSVersion.version
-    $IsVirtual=((Get-WmiObject win32_computersystem).model -eq 'VMware Virtual Platform' -or ((Get-WmiObject win32_computersystem).model -eq 'Virtual Machine'))
     Write-Host "-------------------------------------------" 
     Write-Host "Current Time:" (Get-Date)
     Write-Host "OS:" $osname "-" $osversion 
@@ -37,7 +36,6 @@ function Write-OSInfo{
     } else {
         Write-Host "No"
     }
-    Write-Host "VM?:"$IsVirtual
     Write-Host "-------------------------------------------"
     Write-Host "[*] Run 'systeminfo' to learn more about the system!" -ForegroundColor Cyan
     Write-Host
@@ -52,9 +50,8 @@ function Invoke-BattleStation(){
         .DESCRIPTION
         A Powershell-based Windows Hardening script for use in competitions like MWCCDC or Cyberforce
         .EXAMPLE
-        > Invoke-BattleStation -AddUser
+        > Invoke-BattleStation
         Runs the script, remember to import using . .\Start-BattleStation.ps1
-
     #>
     Print-Header
     Check-Privileges
@@ -64,7 +61,15 @@ function Invoke-BattleStation(){
     Write-Host
         $user = "blueteam"
         Write-Host "[*] Adding User..." -ForegroundColor Green
-        $Password = Read-Host "Enter blueteam password" -AsSecureString
+        do {
+            $Password = Read-Host "Enter blueteam password" -AsSecureString
+            $verify = Read-Host "Re-enter Password" -AsSecureString
+            $tmp1 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
+            $tmp2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($verify))
+            if ($tmp1 -ne $tmp2) {
+                Write-Host "[!] Passwords did not match! Try again." -ForegroundColor Red
+            }
+        } while ($tmp1 -ne $tmp2)
         New-LocalUser "blueteam" -Password $Password -FullName "blooteam" -Description "Blue team account"
         Add-LocalGroupMember -Group "Administrators" -Member "blueteam"
         Invoke-Install("Administrator") # This might need to be changed depending on the circumstance
@@ -74,11 +79,13 @@ function Invoke-Install($user){
     $tools = "c:\Users\$user\Desktop"
     Write-Host "[*] Setting up C:\Users\$user\Desktop\Tools folder..."
     New-Item -Path $tools -Name "Tools" -ItemType "directory"
-
+    $tools = "c:\Users\$user\Desktop\Tools"
     Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/SysinternalsSuite.zip?raw=true" -OutFile $tools"\SysinternalsSuite.zip"
-    Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/windows/HardeningKitty-master.zip?raw=true" -OutFile $tools"\HardeningKitty.zip"
-    Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/setup-hardening/posh-dsc-windows-hardening.zip" -OutFile $tools"\posh-dsc-windows-hardening.zip"
-    
+    Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/windows/HardeningKitty-0.9.0.zip?raw=true" -OutFile $tools"\HardeningKitty.zip"
+    Invoke-WebRequest "https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/setup-hardening/windows_harden.cmd" -Outfile $tools"\windows_harden.cmd"
+    Invoke-WebRequest "https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/systeminformer-3.0.5988-bin.zip?raw=true" -Outfile $tools"\sysinformer.zip"
+
+
     # Install Sysmon
     Expand-Archive -Force $tools\SysinternalsSuite.zip $tools\SysinternalsSuite
     Invoke-WebRequest "https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/utilities/configuration-files/sysmonconfig-export.xml" -Outfile $tools"\sysmonconfig-export.xml"
@@ -88,7 +95,6 @@ function Invoke-Install($user){
     # Set Banner
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "legalnoticecaption" -Value "SYSTEM AUTHORIZATION WARNING"
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "legalnoticetext" -Value "######################################## \n AUTHORIZED USERS ONLY \n UNAUTHORIZED ACCESS WILL BE PROSECUTED TO THE FULL EXTENT OF THE LAW \n########################################"
-
 
     Write-Checklist
 }
@@ -103,6 +109,8 @@ function Write-Checklist{
     Write-Host "    [**] Here's a decent hardening guide: https://security.utexas.edu/os-hardening-checklist/windows-r2" -ForegroundColor Yellow
     Write-Host "    [**] Use our team repo: https://github.com/Lewis-Cyber-Defense/mwccdc" -ForegroundColor Yellow
     Write-Host "    [**] Disable IPv6, LLMNR, turn on SMB signing" -ForegroundColor Yellow
-    Write-Host "    [**] IF THIS IS ACTIVE DIRECTORY, get hands on with those GPOs and OUs" -ForegroundColor Red
+    Write-Host "    [**] MAKE SURE SMB SERVER IS ONLY ACCESSIBLE TO AUTHENTICATED USERS" -ForegroundColor Red
     Write-Host "    [++] Good luck, have fun, ask questions, and happy defending! o7" -ForegroundColor Green
 }
+
+Invoke-BattleStation
