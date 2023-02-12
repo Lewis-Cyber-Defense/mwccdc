@@ -6,39 +6,62 @@ This repository contains all of the open-source scripts and tools to be used in 
 ## Current State
 ```text
 .
+├── checklists
+│   ├── README.md
+│   ├── Ubuntu.md
+│   └── Windows.md
 ├── documentation
-│   ├── Asset-Inventory.xlsx
-│   ├── Incident-Report-Template.docx
-│   ├── Inject-Tracker.xlsx
-│   └── README.md
+│   ├── Asset-Inventory.xlsx
+│   ├── Incident-Report-Template.docx
+│   ├── Inject-Tracker.xlsx
+│   └── README.md
 ├── README.md
 ├── scripts
-│   ├── enumeration
-│   │   ├── linux
-│   │   │   ├── LinEnum.sh
-│   │   │   ├── linpeas.sh
-│   │   │   └── rkhunter-1.4.6.tar.gz
-│   │   ├── README.md
-│   │   └── windows
-│   │       ├── HardeningKitty-master.zip
-│   │       ├── Seatbeltx64.exe
-│   │       ├── Seatbeltx86.exe
-│   │       ├── winPEAS.bat
-│   │       ├── winPEASx64_ofs.exe
-│   │       └── winPEASx86_ofs.exe
-│   └── setup-hardening
-│       ├── posh-dsc-windows-hardening.zip
-│       ├── README.md
-│       ├── Start-BattleStation.ps1
-│       └── start-battlestation.sh
+│   ├── enumeration
+│   │   ├── linux
+│   │   │   ├── LinEnum.sh
+│   │   │   ├── linpeas.sh
+│   │   │   └── rkhunter-1.4.6.tar.gz
+│   │   ├── README.md
+│   │   └── windows
+│   │       ├── HardeningKitty-0.9.0.zip
+│   │       ├── Seatbelt.exe
+│   │       └── winPEAS.exe
+│   └── setup-hardening
+│       ├── README.md
+│       ├── sb-an00b.sh
+│       ├── setup_docker.sh
+│       ├── Start-BattleStation.ps1
+│       ├── start-battlestation.sh
+│       └── windows_harden.cmd
 └── utilities
+    ├── anti-virus
+    │   └── clamav
+    │       ├── clamav-0.104.2.win.x64.msi
+    │       └── clamav-0.104.2.win.x64.zip
+    ├── configuration-files
+    │   ├── collect-all.xml
+    │   ├── README.md
+    │   ├── sshd_config
+    │   ├── sysmonconfig-export.xml
+    │   └── win-banner.ps1
+    ├── DeepBlue
+    │   ├── DeepBlue.ps1
+    │   ├── DeepBlue.zip
+    │   ├── regexes.txt
+    │   └── safelist.txt
     ├── john-1.9.0-jumbo-1-win64.zip
     ├── lynis-3.0.7.zip
     ├── pspy
-    │   ├── pspy32
-    │   └── pspy64
+    │   ├── pspy32
+    │   └── pspy64
     ├── README.md
-    └── SysinternalsSuite.zip
+    ├── SysinternalsSuite.zip
+    ├── SysmonForLinux.zip
+    ├── systeminformer-3.0.5988-bin.zip
+    └── Wireshark-4.0.3.exe
+
+13 directories, 41 files
 ```
 
 - `documentation/`: Contains all documents necessary to respond to injects, incidents, and track inventory
