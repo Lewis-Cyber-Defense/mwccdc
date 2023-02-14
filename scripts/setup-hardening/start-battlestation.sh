@@ -28,6 +28,23 @@ check_for_root () {
     fi
 }
 
+# check package manager
+if [ $(which apt-get) ];
+then
+	pkgmgr="apt-get"
+fi
+if [ $(which yum) ];
+then
+	pkgmgr="yum"
+fi
+if [ $(which pacman) ];
+then
+	pkgmgr="pacman"
+fi
+
+# Output current processes to a file
+ps aux > processes
+
 print_header () {
     echo -e "\e[1;36m$asciiart\e[0m"
     echo -e "\e[1;35mAn00bRektn - https://an00brektn.github.io\e[0m"
@@ -85,13 +102,29 @@ start_battlestation () {
 }
 
 apt_update() {
-    echo -e "\n  $greenplus running: apt update \n"
     eval apt -y update
 }
 
 apt_upgrade() {
-    echo -e "\n  $greenplus running: apt upgrade \n"
     eval apt -y upgrade
+}
+
+package_update() {
+	if [ $pkgmgr == "apt-get" ]; then
+	    echo -e "\n  $greenplus running: apt update \n"
+		apt-get -y update
+	    echo -e "\n  $greenplus running: apt upgrade \n"
+		apt-get -y upgrade
+	fi
+	if [ $pkgmgr == "yum" ]; then
+	    echo -e "\n  $greenplus running: yum update \n"
+		yum update
+	fi
+	if [ $pkgmgr == "pacman" ]; then
+	    echo -e "\n  $greenplus running: packman update \n"
+		pacman -Syy
+		pacman -Su
+	fi
 }
 
 print_header
@@ -99,7 +132,9 @@ check_for_root
 print_info
 start_battlestation
 
-apt_update
-apt_upgrade
+package_update
+
+#apt_update
+#apt_upgrade
 
 print_checklists
