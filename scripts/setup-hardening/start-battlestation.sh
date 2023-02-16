@@ -78,7 +78,7 @@ print_info () {
 
 start_battlestation () {
     echo -e "\n  $greenplus STARTING BATTLESTATION $greenplus\n"
-    if [ $(awk -F: '{ print $1}\)' /etc/passwd | grep sysadmin) ]; then
+    if [ $(awk -F: '{ print $1}' /etc/passwd | grep sysadmin) ]; then
         user_account="sysadmin"
     else
     	user_account="blueteam"
