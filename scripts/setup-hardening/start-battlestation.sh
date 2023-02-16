@@ -78,22 +78,30 @@ print_info () {
 
 start_battlestation () {
     echo -e "\n  $greenplus STARTING BATTLESTATION $greenplus\n"
-    #useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
-    echo -e "$blueinfo Please set the sysadmin password"
-    passwd sysadmin
-    mkdir /home/sysadmin/tools
-    chown sysadmin:sysadmin /home/sysadmin/tools
-    sudo -u sysadmin chmod 0700 /home/sysadmin/tools
+    if [ $(awk -F: '{ print $1})' /etc/passwd | grep sysadmin) ]; then
+        user_account="sysadmin"
+    else
+    	user_account="blueteam"
+	useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
+    fi
 
+    echo -e "$blueinfo Please set the $user_account password"
+    passwd $user_account
+    mkdir /home/$user_account/tools
+    chown $user_account:$user_account /home/$user_account/tools
+    sudo -u $user_account chmod 0700 /home/$user_account/tools
+    
+    sleep 1
+    
     # Download some basic stuffs
-    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/linpeas.sh -O /home/sysadmin/tools/linpeas.sh
-    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/LinEnum.sh -O /home/sysadmin/tools/LinEnum.sh
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/linux/rkhunter-1.4.6.tar.gz?raw=true -O /home/sysadmin/tools/rkhunter-1.4.6.tar.gz
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/pspy/pspy64?raw=true -O /home/sysadmin/tools/pspy64
-    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/lynis-3.0.7.zip?raw=true -O /home/sysadmin/tools/lynis-3.0.7.zip
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/linpeas.sh -O /home/$user_account/tools/linpeas.sh
+    wget https://raw.githubusercontent.com/Lewis-Cyber-Defense/mwccdc/main/scripts/enumeration/linux/LinEnum.sh -O /home/$user_account/tools/LinEnum.sh
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/scripts/enumeration/linux/rkhunter-1.4.6.tar.gz?raw=true -O /home/$user_account/tools/rkhunter-1.4.6.tar.gz
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/pspy/pspy64?raw=true -O /home/$user_account/tools/pspy64
+    wget https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/utilities/lynis-3.0.7.zip?raw=true -O /home/$user_account/tools/lynis-3.0.7.zip
 
     # change ownership
-    find /home/sysadmin/tools -type f | while read line; do chown sysadmin:sysadmin $line; sudo -u sysadmin chmod 0700 $line; done
+    find /home/$user_account/tools -type f | while read line; do chown $user_account:$user_account $line; sudo -u $user_account chmod 0700 $line; done
 
     # Setting banners
     echo -e "$greenplus Setting the banner..."
@@ -128,9 +136,13 @@ package_update() {
 }
 
 print_header
+sleep 1
 check_for_root
+sleep 1
 print_info
+sleep 1
 start_battlestation
+sleep 1
 
 package_update
 
