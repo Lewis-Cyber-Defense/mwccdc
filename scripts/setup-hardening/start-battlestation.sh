@@ -81,8 +81,13 @@ start_battlestation () {
     if [ $(awk -F: '{ print $1}' /etc/passwd | grep sysadmin) ]; then
         user_account="sysadmin"
     else
+    	if [ $pkgmgr == "yum" ]; then
+	    sudo_group=wheel
+	else
+	    sudo_group=sudo
+	fi
     	user_account="blueteam"
-	useradd -m -G sudo -c "Blue Team User" -s /bin/bash blueteam
+	useradd -m -G $sudo_group -c "Blue Team User" -s /bin/bash blueteam
     fi
 
     echo -e "$blueinfo Please set the $user_account password"
