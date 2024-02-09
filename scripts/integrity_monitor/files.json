@@ -1,0 +1,12 @@
+[
+    {
+        "path": "/tmp/foo",
+        "baseline": "",
+        "real": ""
+    },
+    {
+        "path": "/tmp/bar",
+        "baseline": "",
+        "real": ""
+    }
+]
