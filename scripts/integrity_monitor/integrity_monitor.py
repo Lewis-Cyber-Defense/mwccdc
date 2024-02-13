@@ -12,7 +12,7 @@ class C:
 
 
 def hash_file(filename):
-   h = hashlib.sha1()
+   h = hashlib.sha256()
 
    with open(filename,'rb') as file:
        chunk = 0
@@ -29,11 +29,10 @@ if __name__ == "__main__":
     with open(os.path.abspath("files.json") ,'r') as rf:
         data = json.load(rf)
 
-        # compute baseline hashes
     for file in data:
         try:
-            if file['baseline'] is not None:
-                file['baseline'] = hash_file(file['path'])
+            if file['original_hash'] is not None:
+                file['original_hash'] = hash_file(file['path'])
         except FileNotFoundError:
             invalid_files.append(file['path'])
             print(f"{C.WARN}{file['path']}: does not exist{C.END}")
@@ -42,13 +41,13 @@ if __name__ == "__main__":
     while True:
         for file in data:
             try:
-                file['real'] = hash_file(file['path'])
+                file['current_hash'] = hash_file(file['path'])
             except FileNotFoundError:
                 if file['path'] not in invalid_files:
                     print(f"{C.FAIL}{file['path']}: DELETED{C.END}")
                 continue
 
-            if file['real'] == file['baseline']:
+            if file['current_hash'] == file['original_hash']:
                 print(f"{file['path']}: {C.OK}OK{C.END}")
             else:
                 print(f"{C.FAIL}{file['path']}: MODIFIED{C.END}")
