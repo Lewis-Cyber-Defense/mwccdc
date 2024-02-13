@@ -1,12 +1,12 @@
 [
     {
-        "path": "/tmp/test",
-        "original_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "current_hash": "2f00d50282b685887462e9a09c0f7fa4208fda4982094003b06f2328e207573a"
+        "path": "/tmp/foo",
+        "original_hash": "",
+        "current_hash": ""
     },
     {
-        "path": "/tmp/test1",
-        "original_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "current_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        "path": "/tmp/bar",
+        "original_hash": "",
+        "current_hash": ""
     }
 ]
