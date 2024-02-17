@@ -1,4 +1,4 @@
-- Monitors sha1 hashes of the given files (`files.json`) for any changes.
+- Monitors sha256 hashes of the given files (`files.json`) for any changes.
 
 - Will give a warning if any file paths are invalid or don't exist.
 
