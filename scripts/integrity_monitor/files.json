@@ -1,0 +1,17 @@
+[
+    {
+        "path": "/etc/",
+        "is_directory": true,
+        "original_hash": ""
+    },
+    {
+        "path": "/usr/local/bin/",
+        "is_directory": true,
+        "original_hash": ""
+    },
+    {
+        "path": "/var/www/html/zen-cart/admin/",
+        "is_directory": true,
+        "original_hash": ""
+    }
+]
