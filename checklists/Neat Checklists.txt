@@ -1,1 +1,1 @@
-https://github.com/Lewis-Cyber-Defense/mwccdc/blob/main/checklists/Ubuntu.md
+https://github.com/trimstray/linux-hardening-checklist?tab=readme-ov-file#status
